@@ -19,59 +19,58 @@ if (args.h) {
     process.exit(0)
 }
 
-//Latitude variable
 let latitude;
-
-if(args.n && args.s) {
-    console.log("Enter only input one latitude argument. Either north (n) or south (s).");
-    process.exit(0);
-}
-if (args.n) {
-    latitude = args.n
-} else if (args.s) {
-    latitude = 0 - args.s
-} else {
-    latitude = 35.9
-}
-
-//Longitude variable
 let longitude;
 
-if(args.w && args.e) {
-    console.log("Enter only input one longitude argument. Either west (w) or east (e).");
+//Store latitude
+if(args.n && args.s) {
+    console.log("Please only input one latitude argument. Either north (n) or south (s).");
     process.exit(0);
 }
-if (args.e) {
-    longitude = args.e
-} else if (args.w) {
-    longitude = 0 - args.w
+else if(args.n) {
+    latitude = args.n;
+} else if(args.s) {
+    latitude = -args.s;
 } else {
-    longitude = -79.04
-}
+    console.log("Latitude must be in range");
+    process.exit(0);
+
+//Store longitude
+} if(args.w && args.e) {
+    console.log("Please only input one longitude argument. Either west (w) or east (e).");
+    process.exit(0);
+} else if(args.e) {
+    longitude = args.e;
+} else if(args.w) {
+    longitude = -args.w;
+} else {
+    console.log("Please input a longitude argument. Either north west (w) or east (e).");
+    process.exit(0);
+} 
+
 
 //Days constant
-const days = args.n || 1;
+const days = args.n;
 
 //Construct url
 const url = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude + "&timezone=" + timezone + "&daily=precipitation_hours";
 const response = await fetch(url)
 const data = await response.json()
 
+//Output message based on data
 let message; 
-if (data.daily.precipitation_hours[days] > 0 && data.daily.precipitation_hours[days] < 3) {
+if (data.daily.precipitation_hours[days] > 0) {
     message = "Grab an umbrella!"
-} else if (data.daily.precipitation_hours[days] >= 3) {
-    message = "You may need an umbrella"
 } else {
     message = "It's a great day! Go outside!"
 }
 
 if (days == 0) {
-    console.log("today.\n")
-  } else if (days > 1) {
-    console.log("in " + days + " days.\n")
-  } else {
-    console.log("tomorrow.\n")
+    message += "today.";
+} else if (days > 1) {
+    message += "in " + days + " days.";
+} else {
+    message += "tomorrow.";
 }
 
 if (args.j) {
