@@ -54,7 +54,7 @@ const response = await fetch(url)
 const data = await response.json()
 
 //Days constant
-const days = args.n;
+const days = args.d;
 
 //Output message based on data
 let message; 
