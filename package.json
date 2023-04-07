@@ -11,14 +11,14 @@
     "galosh.js": "./cli.js"
   },
   "repository": {
-    "url": "git+https://github.com/comp426-2023-spring/a02-functions-wdrayton.git"
+    "url": "git+https://github.com/comp426-2023-spring/a02-functions-kavyachel.git"
   },
   "author": "kavyachel",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/comp426-2023-spring/a02-functions-wdrayton/issues"
+    "url": "https://github.com/comp426-2023-spring/a02-functions-kavyachel/issues"
   },
-  "homepage": "https://github.com/comp426-2023-spring/a02-functions-wdrayton#readme",
+  "homepage": "https://github.com/comp426-2023-spring/a02-functions-kavyachel#readme",
   "dependencies": {
     "exit": "^0.1.2",
     "minimist": "^1.2.8",

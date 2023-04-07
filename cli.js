@@ -5,9 +5,10 @@ import  moment  from 'moment-timezone'
 import  fetch  from 'node-fetch'
 //import exit from 'node:process'
 
+const timezone = moment.tz.guess();
 const args = minimist(process.argv.slice(2));
 
-if (args.h != null) {
+if (args.h) {
     console.log("Usage: galosh.js [options] -[n|s] LATITUDE -[e|w] LONGITUDE -z TIME_ZONE\n")
     console.log("-h            Show this help message and exit.\n")
     console.log("-n, -s        Latitude: N positive; S negative.\n")
@@ -18,56 +19,51 @@ if (args.h != null) {
     process.exit(0)
 }
 
-//Make latitude variable
-var latitude
-if (args.n != null) {
+//Latitude variable
+let latitude;
+
+if(args.n && args.s) {
+    console.log("Enter only input one latitude argument. Either north (n) or south (s).");
+    process.exit(0);
+}
+if (args.n) {
     latitude = args.n
-} else if (args.s != null) {
+} else if (args.s) {
     latitude = 0 - args.s
 } else {
     latitude = 35.9
 }
 
-//Make longitude variable
-var longitude
-if (args.e != null) {
+//Longitude variable
+let longitude;
+
+if(args.w && args.e) {
+    console.log("Enter only input one longitude argument. Either west (w) or east (e).");
+    process.exit(0);
+}
+if (args.e) {
     longitude = args.e
-} else if (args.w != null) {
+} else if (args.w) {
     longitude = 0 - args.w
 } else {
     longitude = -79.04
 }
-//Make timezone variable
-var timezone
-if (args.z != null) {
-    timezone = args.z
-} else {
-    timezone = moment.tz.guess()
-}
-//Make days constant
-var days
-if (args.d != null) {
-    days = args.d 
-} else {
-    days = 1
-}
+
+//Days constant
+const days = args.n || 1;
 
 //Construct url
-const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=weathercode,precipitation_hours&timezone=' + timezone + '&start_date=2023-02-15&end_date=2023-02-21')
-
+const url = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude + "&timezone=" + timezone + "&daily=precipitation_hours";
+const response = await fetch(url)
 const data = await response.json()
 
-if (args.j != null) {
-    console.log(data)
-    process.exit(0)
-}
-
+let message; 
 if (data.daily.precipitation_hours[days] > 0 && data.daily.precipitation_hours[days] < 3) {
-    console.log("You might need your galoshes ")
+    message = "Grab an umbrella!"
 } else if (data.daily.precipitation_hours[days] >= 3) {
-    console.log("You will probably need your galoshes ")
+    message = "You may need an umbrella"
 } else {
-    console.log("You probably won't need your galoshes ")
+    message = "It's a great day! Go outside!"
 }
 
 if (days == 0) {
@@ -78,6 +74,12 @@ if (days == 0) {
     console.log("tomorrow.\n")
 }
 
-
+if (args.j) {
+    console.log(data);
+    process.exit(0)
+} 
+else {
+    console.log(message);
+}
 
 
